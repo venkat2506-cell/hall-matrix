@@ -1,43 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Allocation Result</title>
-  <link rel="stylesheet" href="/style.css">
+  <meta charset="UTF-8" />
+  <title>Allocation | Hall Matrix</title>
+  <link rel="stylesheet" href="/style.css" />
 </head>
+
 <body>
+  <div class="container">
 
-<div class="container">
-  <div class="main">
-    <div class="card">
-      <h3>Allocation Result</h3>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <h2>Hall Matrix</h2>
+      <ul>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/students">Students</a></li>
+        <li><a href="/halls">Halls</a></li>
+        <li><a href="/subjects">Subjects</a></li>
+        <li><a href="/invigilators">Invigilators</a></li>
+        <li class="active"><a href="/allocation">Allocation</a></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+    </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Reg No</th>
-            <th>Hall</th>
-            <th>Subject</th>
-            <th>Date</th>
-            <th>Session</th>
-            <th>Invigilator</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% allocations.forEach(a => { %>
-          <tr>
-            <td><%= a.reg_no %></td>
-            <td><%= a.hall_no %></td>
-            <td><%= a.subject_code %></td>
-            <td><%= a.exam_date %></td>
-            <td><%= a.session %></td>
-            <td><%= a.invigilator %></td>
-          </tr>
-          <% }) %>
-        </tbody>
-      </table>
+    <!-- MAIN CONTENT -->
+    <div class="main">
+
+      <div class="topbar">
+        <h1>Seat Allocation</h1>
+        <p>Generate exam seating arrangement</p>
+      </div>
+
+      <div class="card">
+        <h3>Allocation Input</h3>
+
+        <form method="POST" action="/allocation/generate" class="form-inline">
+
+          <input
+            type="text"
+            name="subject_codes"
+            placeholder="Subject Codes (CS101,CS102)"
+            required
+          />
+
+          <input
+            type="date"
+            name="exam_date"
+            required
+          />
+
+          <select name="session" required>
+            <option value="">Select Session</option>
+            <option value="FN">FN</option>
+            <option value="AN">AN</option>
+          </select>
+
+          <button type="submit">Generate Preview</button>
+        </form>
+      </div>
+
     </div>
   </div>
-</div>
-
 </body>
 </html>

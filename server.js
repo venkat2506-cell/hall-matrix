@@ -12,7 +12,6 @@ const fs = require("fs");
 const XLSX = require("xlsx");
 const allocateStudents = require("./utils/allocationLogic");
 
-
 /* =======================
    2. APP & DB
 ======================= */
@@ -284,40 +283,28 @@ app.post("/invigilators/delete/:id", requireLogin, (req, res) => {
    13. ALLOCATION
 ======================= */
 app.get("/allocation", requireLogin, (req, res) => {
-  res.render("allocation", { currentPage: "allocation" });
+  res.render("allocation", {
+    user: req.session.user,
+    currentPage: "allocation",
+  });
 });
 
 app.post("/allocation/generate", requireLogin, (req, res) => {
   const { subject_codes, exam_date, session } = req.body;
-  const codes = subject_codes.split(",").map((c) => c.trim());
 
-  db.all(
-    `SELECT regno, dept FROM students WHERE subject_code IN (${codes
-      .map(() => "?")
-      .join(",")})`,
-    codes,
-    (err, students) => {
-      if (err || students.length === 0) return res.send("No students found");
+  if (!subject_codes) {
+    return res.send("❌ subject_codes missing from form");
+  }
 
-      db.all("SELECT * FROM halls", (err, halls) => {
-        if (err) return res.send("No halls");
+  const codes = subject_codes
+    .split(",")
+    .map((c) => c.trim())
+    .filter(Boolean);
 
-        const allocation = allocateStudents({
-          students,
-          halls: halls.map((h) => ({
-            hall_no: h.hall_no,
-            rows: Math.ceil(h.capacity / 4),
-            cols: 4,
-          })),
-          date: exam_date,
-          session,
-          invigilator: "Assigned Automatically",
-        });
+  console.log("SUBJECT CODES:", codes);
+  console.log("DATE:", exam_date, "SESSION:", session);
 
-        res.render("allocation_preview", { allocation });
-      });
-    }
-  );
+  res.send("Allocation input received correctly");
 });
 
 
